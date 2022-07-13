@@ -53,7 +53,7 @@ func (s *APIServer) configureStore() error {
 	if err != nil {
 		return err
 	}
-	s.store = st
+	//s.store = st
 	return nil
 }
 func (s *APIServer) handleHello() http.HandlerFunc {
