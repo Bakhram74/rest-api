@@ -4,7 +4,6 @@ type Config struct {
 	DatabaseUrl string `json:"database_url"`
 }
 
-//func NewConfig() *Config {
-//	return &Config{}
-//
-//}
+func NewConfig() *Config {
+	return &Config{}
+}
