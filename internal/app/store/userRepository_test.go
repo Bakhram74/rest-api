@@ -20,7 +20,7 @@ func TestUserRepository_Create(t *testing.T) {
 func TestUserRepository_FindByEmail(t *testing.T) {
 	s, teardown := store.TestStore(t, databaseUrl)
 	defer teardown("users")
-	email := "example@.com"
+	email := "example@list.com"
 	_, err := s.User().FindByEmail(email)
 	assert.Error(t, err)
 
