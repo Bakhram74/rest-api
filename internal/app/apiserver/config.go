@@ -1,11 +1,9 @@
 package apiserver
 
-import "github.com/Bakhram74/rest-api.git/internal/app/store"
-
 type Config struct {
-	BindAddr string `json:"bind_addr"`
-	LogLevel string `json:"log_level"`
-	Store    *store.Config
+	BindAddr    string `json:"bind_addr"`
+	LogLevel    string `json:"log_level"`
+	DatabaseUrl string `json:"database_url"`
 }
 
 //func NewConfig() *Config {

@@ -32,7 +32,7 @@ func TestUser_Validation(t *testing.T) {
 			name: "invalid email",
 			u: func() *model.User {
 				u := model.TestingUser(t)
-				u.Email = ""
+				u.Email = "invalid"
 				return u
 			},
 			isValid: false,
