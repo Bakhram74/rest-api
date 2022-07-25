@@ -12,6 +12,7 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"time"
 )
 
 const (
@@ -49,6 +50,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 func (s *server) configureRouter() {
 	s.router.Use(s.setRequestId)
+	s.router.Use(s.logRequestId)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
 	s.router.HandleFunc("/users", s.handleUsersCreate()).Methods("POST")
 	s.router.HandleFunc("/sessions", s.handleSessionsCreate()).Methods("POST")
@@ -63,7 +65,19 @@ func (s *server) setRequestId(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyRequest, id)))
 	})
 }
-
+func (s *server) logRequestId(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger := logrus.WithFields(logrus.Fields{
+			"remote_addr": r.RemoteAddr,
+			"request_id":  r.Context().Value(ctxKeyRequest),
+		})
+		logger.Infof("started %s %s", r.Method, r.RequestURI)
+		start := time.Now()
+		rw := &responseWriter{w, http.StatusOK}
+		next.ServeHTTP(rw, r)
+		logger.Infof("comleted with %d %s in %v", rw.code, http.StatusText(rw.code), time.Now().Sub(start))
+	})
+}
 func (s *server) authenticateUser(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, err := s.sessionStore.Get(r, sessionName)
