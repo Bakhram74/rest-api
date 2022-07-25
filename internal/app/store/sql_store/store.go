@@ -15,6 +15,7 @@ func New(db *sql.DB) *Store {
 }
 
 func (s *Store) User() store.UserRepository {
+	// todo
 	if s.userRepository != nil {
 		return s.userRepository
 	}

@@ -18,6 +18,17 @@ func TestUserRepository_Create(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
 }
+func TestUserRepository_Find(t *testing.T) {
+	db, teardown := sql_store.TestDB(t, databaseUrl)
+	defer teardown("users")
+	s := sql_store.New(db)
+	u := model.TestingUser(t)
+	s.User().Create(u)
+	u2, err := s.User().Find(u.ID)
+
+	assert.NotNil(t, u2)
+	assert.NoError(t, err)
+}
 
 func TestUserRepository_FindByEmail(t *testing.T) {
 	db, teardown := sql_store.TestDB(t, databaseUrl)
